@@ -45,7 +45,7 @@ Yukarıdaki kodu girdiğinizde çöyle bir çıktı alacaksınız `override the 
 
 VALIDATOR env değişkenini ayarlama
 ```shell
-export VALIDATOR="$(palomad keys list --list-names | head -n1)"`
+export VALIDATOR="$(palomad keys list --list-names | head -n1)"
 ```
 * Buradan sonraki aşamaya geçmeden önce [Alchemy](https://alchemy.com/?r=zc3NjI5NzM1NzMxN)'den bir hesap oluşturup ETH Mainnet App oluşturuyoruz. Burada 'View Key' bölümünden 'https' ile başlayan linkimizi alıyoruz.
 
