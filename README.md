@@ -38,15 +38,15 @@ pigeon evm keys import ~/.pigeon/keys/evm/eth-main
 ### Yapılandırma Kurulumu
 * Burada Paloma cüzdanımızı içeri aktarıyoruz.
 * VALIDATOR_ADINIZ kısmına Paloma validator adınızı yazınız.
-
-`palomad keys add "VALIDATOR_ADINIZ" --recover`
-
+```shell
+palomad keys add "VALIDATOR_ADINIZ" --recover`
+```
 Yukarıdaki kodu girdiğinizde çöyle bir çıktı alacaksınız `override the existing name VALIDATOR_ADINIZ [y/N]:` buna yes yani y diyerek devam ediyoruz. Ardından sizden > `Enter your bip39 mnemonic` cüzdanınıza ait menemonicleri isteyecek onları yazı işleme devam ediyoruz.
 
 VALIDATOR env değişkenini ayarlama
-
-`export VALIDATOR="$(palomad keys list --list-names | head -n1)"`
-
+```shell
+export VALIDATOR="$(palomad keys list --list-names | head -n1)"`
+```
 * Buradan sonraki aşamaya geçmeden önce [Alchemy](https://alchemy.com/?r=zc3NjI5NzM1NzMxN)'den bir hesap oluşturup ETH Mainnet App oluşturuyoruz. Burada 'View Key' bölümünden 'https' ile başlayan linkimizi alıyoruz.
 
 
