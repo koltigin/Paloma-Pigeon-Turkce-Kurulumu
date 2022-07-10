@@ -1,45 +1,16 @@
+# Paloma Testnet-6 Pigeon Yazılımı Türkçe Kurulum Rehberi
+
 ![Logo!](assets/paloma.png)
 
 # Pigeon
 
-> A Golang cross-chain message relayer system
-> for Paloma validators to deliver messages to any blockchain.
+> Paloma doğrulayıcılarının mesajları herhangi bir blok zincirine iletmeleri için bir Golang zincirler arası mesaj aktarma sistemidir.
 
-For Crosschain software engineers that want simultaneous control of mulitiple smart contracts, on any blockchain, Paloma is decentralized and consensus-driven message delivery, fast state awareness, low cost state computation, and powerful attestation system that enables scaleable, crosschain, smart contract execution with any data source.
-
-## Table of Contents
-
-- [Talk To Us](#talk-to-us)
-- [Releases](#releases)
-- [Active Networks](#active-networks)
-- [Issues](#issues)
-- [Install](#install)
+Paloma, herhangi bir blok zincirinde birden fazla akıllı sözleşmenin eşzamanlı kontrolünü isteyen Crosschain yazılım mühendisleri için,
+herhangi bir veri kaynağıyla ölçeklenebilir, zincirler arası, akıllı sözleşme yürütmesine olanak tanıyan, merkezi olmayan ve fikir birliğine dayalı mesaj teslimi, hızlı durum farkındalığı, düşük maliyetli durum hesaplaması ve güçlü doğrulama sistemidir.
 
 
-## Talk to us
-
-We have active, helpful communities on Twitter and Telegram.
-
-* [Twitter](https://twitter.com/paloma_chain)
-* [Telegram](https://t.me/palomachain)
-
-## Releases
-
-See [Release procedure](CONTRIBUTING.md#release-procedure) for more information about the release model.
-
-## Active Networks
-
-### Public Testnest 6
-
-
-
-
-## ISSUES
-
-This repo does not accept issues. Please use https://github.com/palomachain/paloma/issues to submit issues and add pigeon label!
-
-
-## Install
+## Pigeon Yükleme
 
 ```shell
 wget -O - https://github.com/palomachain/pigeon/releases/download/v0.2.5-alpha/pigeon_0.2.5-alpha_Linux_x86_64v3.tar.gz | \
@@ -48,40 +19,52 @@ chmod +x /usr/local/bin/pigeon
 mkdir ~/.pigeon
 ```
 
-## Set up your EVM Keys. Don't forget your passwords!
+## EVM (ETH) Cüzdan
 
+### Yeni Cüzdan Oluşturma
+* Şifrenizi ve mnemoniclerinizi unutmayınız, kaydediniz.
 ```
 pigeon evm keys generate-new ~/.pigeon/keys/evm/eth-main
 ```
 
-or import existing you existing Ethereum evm private keys
+### Mevcut Cüzdanı İçeri Aktarma
+* Cüzdanınıza ait menemonicleriniz var ise bu kod ile cüzdanınızı içeri aktarınız.
+* Ben Paloma formunda verdiğim ETH adresimi içeri aktaracağım.
 
 ```
 pigeon evm keys import ~/.pigeon/keys/evm/eth-main
 ```
 
-### Config setup
+### Yapılandırma Kurulumu
+* Burada Paloma cüzdanımızı içeri aktarıyoruz.
+* VALIDATOR_ADINIZ kısmına Paloma validator adınızı yazınız.
 
-Make sure your Paloma Cosmos-SDK keys are stored and available on your environment.
+`palomad keys add "VALIDATOR_ADINIZ" --recover`
 
-`palomad keys add "$VALIDATOR" --recover`
+Yukarıdaki kodu girdiğinizde çöyle bir çıktı alacaksınız `override the existing name VALIDATOR_ADINIZ [y/N]:` buna yes yani y diyerek devam ediyoruz. Ardından sizden > `Enter your bip39 mnemonic` cüzdanınıza ait menemonicleri isteyecek onları yazı işleme devam ediyoruz.
 
-Set the VALIDATOR env variable
+VALIDATOR env değişkenini ayarlama
 
 `export VALIDATOR="$(palomad keys list --list-names | head -n1)"`
 
-Create configuration file here `~/.pigeon/config.yaml`
+* Buradan sonraki aşamaya geçmeden önce [Alchemy](https://alchemy.com/?r=zc3NjI5NzM1NzMxN)'den bir hesap oluşturup ETH Mainnet App oluşturuyoruz. Burada 'View Key' bölümünden 'https' ile başlayan linkimizi alıyoruz.
+
+
+* Yapılandırma dosyasını oluşturma `~/.pigeon/config.yaml`
+Burada belirtilen dizine config.yaml dosyası oluşturuyoruz. Aşağıdaki kodu kendimize göre düzenleyerek tek seferde çalıştırıyoruz.
 
 ```yaml
+cat <<EOT >~/.pigeon/config.yaml
+
 loop-timeout: 5s
 
 paloma:
   chain-id: paloma-testnet-6
   call-timeout: 20s
   keyring-dir: ~/.paloma
-  keyring-pass-env-name: PALOMA_KEYRING_PASS
+  keyring-pass-env-name: PALOMA_CUZDAN_SIFRENIZ
   keyring-type: test
-  signing-key: ${VALIDATOR}
+  signing-key: VALIDATOR_ADINIZ
   base-rpc-url: http://localhost:26657
   gas-adjustment: 1.5
   gas-prices: 0.001ugrain
@@ -90,37 +73,36 @@ paloma:
 evm:
   eth-main:
     chain-id: 1
-    base-rpc-url: ${ETH_RPC_URL}
-    keyring-pass-env-name: ETH_PASSWORD
-    signing-key: ${ETH_SIGNING_KEY}
+    base-rpc-url: ALCHEMY_LINKINIZ
+    keyring-pass-env-name: ETH_CUZDAN_SIFRENIZ
+    signing-key: ETH_HEX_KEYINIZ
     keyring-dir: ~/.pigeon/keys/evm/eth-main
-```
-
-
-### Start pigeon
-
-First pigeon will need some keys:
-
-```shell
-cat <<EOT >~/.pigeon/env.sh
-PALOMA_KEYRING_PASS=<your Paloma key password>
-ETH_RPC_URL=<Your Ethereum mainnet RPC URL>
-ETH_PASSWORD=<Your ETH Key Password>
-ETH_SIGNING_KEY=<Your ETH SIGNING KEY>
-VALIDATOR=<VALIDATOR NAME>
 EOT
 ```
 
-Then we can run pigeon with:
+### Pigeon'u Başlatma
+
+İlk güvercinimiz birkaç anahtara ihtiyacı vardır, bunun için 'env.sh' doyası oluşturuyoruz:
+
+```shell
+cat <<EOT >~/.pigeon/env.sh
+PALOMA_KEYRING_PASS=PALOMA_CUZDAN_SIFRENIZ
+ETH_RPC_URL=ALCHEMY_LINKINIZ
+ETH_PASSWORD=ETH_CUZDAN_SIFRENIZ
+ETH_SIGNING_KEY=ETH_HEX_KEYINIZ
+VALIDATOR=VALIDATOR_ADINIZ
+EOT
+```
+
+* Sonra aşağıdaki kodla güvercini çalıştırıyoruz:
 
 ```shell
 source ~/.pigeon/env.sh
 pigeon start
 ```
 
-#### Using systemd
+#### Servis Dosyası Oluşturma
 
-Make sure you have configured `.pigeon/env.sh` as above. Then create a systemctl configuration:
 
 ```shell
 cat <<EOT >/etc/systemd/system/pigeond.service
@@ -144,18 +126,23 @@ WantedBy=multi-user.target
 EOT
 ```
 
-Then start our pigeon!
+Son olarak güvercini başlatıyoruz.
 
 ```shell
 service pigeond start
+```
 
-# Check that it's running successfully:
+#### Servis Durumunu Görme:
+```
 service pigeond status
-# Or watch the logs:
+```
+#### Logları İzleme:
+```
 journalctl -u pigeond.service -f -n 100
 ```
 
-### Definitions and Descriptions of Pigeons Variables
+### Pigeon Değişkenlerinin Tanımları ve Açıklamaları
+* Bu bölümü daha sonra Türkçeleştireceğim.
   - for paloma key:
 	- keyring-dir
       - right now it's not really super important where this points. The important things for the future is that pigeon needs to send transactions to Paloma using it's validator (operator) key!
