@@ -39,7 +39,7 @@ pigeon evm keys import ~/.pigeon/keys/evm/eth-main
 * Burada Paloma cüzdanımızı içeri aktarıyoruz.
 * VALIDATOR_ADINIZ kısmına Paloma validator adınızı yazınız.
 ```shell
-palomad keys add "VALIDATOR_ADINIZ" --recover`
+palomad keys add VALIDATOR_ADINIZ --recover`
 ```
 Yukarıdaki kodu girdiğinizde çöyle bir çıktı alacaksınız `override the existing name VALIDATOR_ADINIZ [y/N]:` buna yes yani y diyerek devam ediyoruz. Ardından sizden > `Enter your bip39 mnemonic` cüzdanınıza ait menemonicleri isteyecek onları yazı işleme devam ediyoruz.
 
