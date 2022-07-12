@@ -52,6 +52,7 @@ export VALIDATOR="$(palomad keys list --list-names | head -n1)"
 
 * Yapılandırma dosyasını oluşturma `~/.pigeon/config.yaml`
 Burada belirtilen dizine config.yaml dosyası oluşturuyoruz. Aşağıdaki kodu kendimize göre düzenleyerek tek seferde çalıştırıyoruz.
+PALOMA_KEYRING_PASS ve ETH_PASS değiştirmeden bırakıyoruz.
 
 ```yaml
 cat <<EOT >~/.pigeon/config.yaml
@@ -62,7 +63,7 @@ paloma:
   chain-id: paloma-testnet-6
   call-timeout: 20s
   keyring-dir: ~/.paloma
-  keyring-pass-env-name: PALOMA_CUZDAN_SIFRENIZ
+  keyring-pass-env-name: PALOMA_KEYRING_PASS
   keyring-type: test
   signing-key: VALIDATOR_ADINIZ
   base-rpc-url: http://localhost:26657
@@ -74,7 +75,7 @@ evm:
   eth-main:
     chain-id: 1
     base-rpc-url: ALCHEMY_LINKINIZ
-    keyring-pass-env-name: ETH_CUZDAN_SIFRENIZ
+    keyring-pass-env-name: ETH_PASS
     signing-key: ETH_HEX_KEYINIZ
     keyring-dir: ~/.pigeon/keys/evm/eth-main
 EOT
