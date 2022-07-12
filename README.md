@@ -10,7 +10,7 @@ Paloma, herhangi bir blok zincirinde birden fazla akıllı sözleşmenin eşzama
 herhangi bir veri kaynağıyla ölçeklenebilir, zincirler arası, akıllı sözleşme yürütmesine olanak tanıyan, merkezi olmayan ve fikir birliğine dayalı mesaj teslimi, hızlı durum farkındalığı, düşük maliyetli durum hesaplaması ve güçlü doğrulama sistemidir.
 
 ## Alchemy Hesap Açma
-* Yükleme işlemine geçmeden önce [Alchemy](https://alchemy.com/?r=zc3NjI5NzM1NzMxN)'den bir hesap oluşturup ETH Mainnet App oluşturuyoruz. Burada 'View Key' bölümünden 'https' ile başlayan linkimizi alıyoruz ve kurulum sırasında Alchemy linki geçen yerde kullanmak üzere bir txt dosyasına kaydediyoruz.
+* Yükleme işlemine geçmeden önce [Alchemy](https://alchemy.com/?r=zc3NjI5NzM1NzMxN)'den bir hesap oluşturup ETH Mainnet App oluşturuyoruz. Burada `View Key` bölümünden `https` ile başlayan linkimizi alıyoruz ve kurulum sırasında Alchemy linki geçen yerde kullanmak üzere bir txt dosyasına kaydediyoruz.
 
 ## Pigeon Yükleme
 
@@ -37,7 +37,7 @@ pigeon evm keys generate-new ~/.pigeon/keys/evm/eth-main
 pigeon evm keys import ~/.pigeon/keys/evm/eth-main
 ```
 ### Değişkenleri Yüklüyoruz
-* Arkadaşlar buradaki bilgileri giriyoruz aşağıdaki kodda ilgili yerlere giriyoruz. Bu aşamadan sonra aksi belirtilmedikçe hiçbir kodda değişiklik yapılmayacaktır.
+* Arkadaşlar aşağıda yazan bilgileri aşağıdaki kodda ilgili yerlere giriyoruz. Bu aşamadan sonra aksi belirtilmedikçe hiçbir kodda değişiklik yapılmayacaktır.
 	* '$VALIDATOR' validator adınız
 	* '$WALLET' paloma cüzdan adınız
 	* '$ETH_RPC_URL' alchemy'den aldığınız link https ile başlayan
