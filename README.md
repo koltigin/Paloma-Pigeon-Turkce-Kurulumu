@@ -41,7 +41,7 @@ pigeon evm keys import ~/.pigeon/keys/evm/eth-main
 ```shell
 palomad keys add VALIDATOR_ADINIZ --recover`
 ```
-Yukarıdaki kodu girdiğinizde çöyle bir çıktı alacaksınız `override the existing name VALIDATOR_ADINIZ [y/N]:` buna yes yani y diyerek devam ediyoruz. Ardından sizden > `Enter your bip39 mnemonic` cüzdanınıza ait menemonicleri isteyecek onları yazı işleme devam ediyoruz.
+Yukarıdaki kodu girdiğinizde çöyle bir çıktı alacaksınız `override the existing name VALIDATOR_ADINIZ [y/N]:` buna yes yani y diyerek devam ediyoruz. Ardından sizden > `Enter your bip39 mnemonic` cüzdanınıza ait menemonicleri isteyecek onları yazıp işleme devam ediyoruz.
 
 VALIDATOR env değişkenini ayarlama
 ```shell
@@ -52,7 +52,10 @@ export VALIDATOR="$(palomad keys list --list-names | head -n1)"
 
 * Yapılandırma dosyasını oluşturma `~/.pigeon/config.yaml`
 Burada belirtilen dizine config.yaml dosyası oluşturuyoruz. Aşağıdaki kodu kendimize göre düzenleyerek tek seferde çalıştırıyoruz.
-PALOMA_KEYRING_PASS ve ETH_PASS değiştirmeden bırakıyoruz.
+	* PALOMA_KEYRING_PASS ve ETH_PASS değiştirmeden bırakıyoruz.
+	* VALIDATOR_ADINIZ bu bölüme validator adımızı yazıyoruz.
+	* ETH_KEYINIZ bölümüne cüzdan oluşturduğunuzda sonda rakamlardan oluşan kodu ekliyoruz. Bu kod aslında cüzdan adresinizin 0x bölümü olamadanki hali.
+	
 
 ```yaml
 cat <<EOT >~/.pigeon/config.yaml
@@ -76,7 +79,7 @@ evm:
     chain-id: 1
     base-rpc-url: ALCHEMY_LINKINIZ
     keyring-pass-env-name: ETH_PASS
-    signing-key: ETH_HEX_KEYINIZ
+    signing-key: ETH_KEYINIZ
     keyring-dir: ~/.pigeon/keys/evm/eth-main
 EOT
 ```
