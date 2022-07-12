@@ -9,6 +9,8 @@
 Paloma, herhangi bir blok zincirinde birden fazla akıllı sözleşmenin eşzamanlı kontrolünü isteyen Crosschain yazılım mühendisleri için,
 herhangi bir veri kaynağıyla ölçeklenebilir, zincirler arası, akıllı sözleşme yürütmesine olanak tanıyan, merkezi olmayan ve fikir birliğine dayalı mesaj teslimi, hızlı durum farkındalığı, düşük maliyetli durum hesaplaması ve güçlü doğrulama sistemidir.
 
+## Alchemy Hesap Açma
+* Yükleme işlemine geçmeden önce [Alchemy](https://alchemy.com/?r=zc3NjI5NzM1NzMxN)'den bir hesap oluşturup ETH Mainnet App oluşturuyoruz. Burada 'View Key' bölümünden 'https' ile başlayan linkimizi alıyoruz ve kurulum sırasında Alchemy linki geçen yerde kullanmak üzere bir txt dosyasına kaydediyoruz.
 
 ## Pigeon Yükleme
 
@@ -34,28 +36,50 @@ pigeon evm keys generate-new ~/.pigeon/keys/evm/eth-main
 ```
 pigeon evm keys import ~/.pigeon/keys/evm/eth-main
 ```
+### Değişkenleri Yüklüyoruz
+* Arkadaşlar buradaki bilgileri giriyoruz aşağıdaki kodda ilgili yerlere giriyoruz. Bu aşamadan sonra aksi belirtilmedikçe hiçbir kodda değişiklik yapılmayacaktır.
+	* '$VALIDATOR' validator adınız
+	* '$WALLET' paloma cüzdan adınız
+	* '$ETH_RPC_URL' alchemy'den aldığınız link https ile başlayan
+	* '$ETH_SIGNING_KEY' cüzdan oluşturduğunuzda sondaki rakamlardan oluşan kod
+	* '$PALOMA_KEYRING_PASS' paloma cüzdan şifreniz
+	* '$ETH_PASSWORD' ETH cüzdan şifreniz
+```shell
+echo 'export VALIDATOR='$VALIDATOR >> $HOME/.bash_profile
+echo 'export ETH_RPC_URL='$ETH_RPC_URL >> $HOME/.bash_profile
+echo 'export ETH_SIGNING_KEY='$ETH_SIGNING_KEY >> $HOME/.bash_profile
+echo 'export PALOMA_KEYRING_PASS='$PALOMA_KEYRING_PASS >> $HOME/.bash_profile
+echo 'export ETH_PASSWORD='$ETH_PASSWORD >> $HOME/.bash_profile
+echo 'export WALLET='$WALLET >> $HOME/.bash_profile
+source $HOME/.bash_profile
+```
 
 ### Yapılandırma Kurulumu
 * Burada Paloma cüzdanımızı içeri aktarıyoruz.
-* VALIDATOR_ADINIZ kısmına Paloma validator adınızı yazınız.
 ```shell
-palomad keys add VALIDATOR_ADINIZ --recover`
+palomad keys add "$VALIDATOR" --recover
 ```
-Yukarıdaki kodu girdiğinizde çöyle bir çıktı alacaksınız `override the existing name VALIDATOR_ADINIZ [y/N]:` buna yes yani y diyerek devam ediyoruz. Ardından sizden > `Enter your bip39 mnemonic` cüzdanınıza ait menemonicleri isteyecek onları yazıp işleme devam ediyoruz.
 
-VALIDATOR env değişkenini ayarlama
+* Eğer cüzdan adınız validator adınızdan farklı ise yukarıdaki kod yerine bu kodu giriyoruz.
+```shell
+palomad keys add "$WALLET" --recover 
+```
+
+Yukarıdaki kodu girdiğinizde şifrenizi girdiktensonra şöyle bir çıktı alacaksınız `override the existing name VALIDATOR_ADINIZ [y/N]:` buna yes yani y diyerek devam ediyoruz. Ardından sizden > `Enter your bip39 mnemonic` cüzdanınıza ait menemonicleri isteyecek onları yazıp işleme devam ediyoruz.
+
+### VALIDATOR env değişkenini ayarlama
 ```shell
 export VALIDATOR="$(palomad keys list --list-names | head -n1)"
 ```
-* Buradan sonraki aşamaya geçmeden önce [Alchemy](https://alchemy.com/?r=zc3NjI5NzM1NzMxN)'den bir hesap oluşturup ETH Mainnet App oluşturuyoruz. Burada 'View Key' bölümünden 'https' ile başlayan linkimizi alıyoruz.
 
+### Yapılandırma dosyasını oluşturma 
+Burada belirtilen dizine `~/.pigeon/config.yaml` config.yaml dosyası oluşturuyoruz.
+!! Bu ilemi yapmadan önce `~/.paloma/config/client.toml` dosyası içerisinde `keyring-backend` bölümünde ne yazdığına bakıyoruz
+eğer `keyring-backend = "os"` yazıyorsa aşağıda keyring-type bölümünü de `os` yapıyoruz, şu şekilde `keyring-type: os`
+eğer `keyring-backend = "test"` yazıyorsa aşağıda `keyring-type` bölümünü de `test` yapıyoruz, şu şekilde `keyring-type: test`
 
-* Yapılandırma dosyasını oluşturma `~/.pigeon/config.yaml`
-Burada belirtilen dizine config.yaml dosyası oluşturuyoruz. Aşağıdaki kodu kendimize göre düzenleyerek tek seferde çalıştırıyoruz.
-	* PALOMA_KEYRING_PASS ve ETH_PASS değiştirmeden bırakıyoruz.
-	* VALIDATOR_ADINIZ bu bölüme validator adımızı yazıyoruz.
-	* ETH_KEYINIZ bölümüne cüzdan oluşturduğunuzda sonda rakamlardan oluşan kodu ekliyoruz. Bu kod aslında cüzdan adresinizin 0x bölümü olamadanki hali.
-	
+Bu dosyaya terminalden `cat .paloma/config/client.toml` yazarak ulaşıp çıktıda `keyring-backend` bölümünde ne yazdığını görebilirsiniz.
+Aşağıdaki kodda hiçbir değişiklik yapmıyoruz!
 
 ```yaml
 cat <<EOT >~/.pigeon/config.yaml
@@ -67,8 +91,8 @@ paloma:
   call-timeout: 20s
   keyring-dir: ~/.paloma
   keyring-pass-env-name: PALOMA_KEYRING_PASS
-  keyring-type: test
-  signing-key: VALIDATOR_ADINIZ
+  keyring-type: os
+  signing-key: ${VALIDATOR}
   base-rpc-url: http://localhost:26657
   gas-adjustment: 1.5
   gas-prices: 0.001ugrain
@@ -77,9 +101,9 @@ paloma:
 evm:
   eth-main:
     chain-id: 1
-    base-rpc-url: ALCHEMY_LINKINIZ
-    keyring-pass-env-name: ETH_PASS
-    signing-key: ETH_KEYINIZ
+    base-rpc-url: ${ETH_RPC_URL}
+    keyring-pass-env-name: ETH_PASSWORD
+    signing-key: ${ETH_SIGNING_KEY}
     keyring-dir: ~/.pigeon/keys/evm/eth-main
 EOT
 ```
@@ -90,15 +114,15 @@ EOT
 
 ```shell
 cat <<EOT >~/.pigeon/env.sh
-PALOMA_KEYRING_PASS=PALOMA_CUZDAN_SIFRENIZ
-ETH_RPC_URL=ALCHEMY_LINKINIZ
-ETH_PASSWORD=ETH_CUZDAN_SIFRENIZ
-ETH_SIGNING_KEY=ETH_HEX_KEYINIZ
-VALIDATOR=VALIDATOR_ADINIZ
+PALOMA_KEYRING_PASS=${PALOMA_KEYRING_PASS}
+ETH_RPC_URL=${ETH_RPC_URL}
+ETH_PASSWORD=${ETH_PASSWORD}
+ETH_SIGNING_KEY=${ETH_SIGNING_KEY}
+VALIDATOR=${VALIDATOR}
 EOT
 ```
 
-* Sonra aşağıdaki kodla güvercini çalıştırıyoruz:
+### Güvercini Çalıştırma
 
 ```shell
 source ~/.pigeon/env.sh
@@ -130,18 +154,28 @@ WantedBy=multi-user.target
 EOT
 ```
 
-Son olarak güvercini başlatıyoruz.
+### Güvercini Tekrar Başlatma
 
 ```shell
+systemctl daemon-reload
+systemctl enable pigeond
+systemctl restart pigeond
 service pigeond start
 ```
 
 #### Servis Durumunu Görme:
-```
+```shell
 service pigeond status
 ```
-#### Logları İzleme:
+
+#### ChainInfos Bilgilerini Alma
+`palomavaloper` yazan yere palomavaloper ile başlayan adresimizi yazıyoruz.
+```shell
+palomad q valset validator-info palomavaloper
 ```
+
+#### Logları İzleme:
+```shell
 journalctl -u pigeond.service -f -n 100
 ```
 
