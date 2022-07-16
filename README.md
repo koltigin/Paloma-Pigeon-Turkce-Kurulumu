@@ -30,9 +30,9 @@ pigeon evm keys generate-new ~/.pigeon/keys/evm/eth-main
 ```
 
 ### Mevcut Cüzdanı İçeri Aktarma
-* Cüzdanınıza ait menemonicleriniz var ise bu kod ile cüzdanınızı içeri aktarınız.
 * Ben Paloma formunda verdiğim ETH adresimi içeri aktaracağım.
-
+* Cüzdanınıza ait `private key`iniz var ise bu kod ile cüzdanınızı içeri aktarınız.
+* Cüzdan aktarma işlemini `private key` ile yapıyoruz, bunu yaparken ilk iki haneyi yani `0x` kısmını yazmıyoruz. Bu şekilde kalan kısım HEX kodumuz oluyor.
 ```
 pigeon evm keys import ~/.pigeon/keys/evm/eth-main
 ```
