@@ -38,12 +38,12 @@ pigeon evm keys import ~/.pigeon/keys/evm/eth-main
 ```
 ### Değişkenleri Yüklüyoruz
 * Arkadaşlar aşağıda yazan bilgileri aşağıdaki kodda ilgili yerlere giriyoruz. Bu aşamadan sonra aksi belirtilmedikçe hiçbir kodda değişiklik yapılmayacaktır.
-	* '$VALIDATOR' validator adınız
-	* '$WALLET' paloma cüzdan adınız
-	* '$ETH_RPC_URL' alchemy'den aldığınız link https ile başlayan
-	* '$ETH_SIGNING_KEY' cüzdan oluşturduğunuzda sondaki rakamlardan oluşan kod
-	* '$PALOMA_KEYRING_PASS' paloma cüzdan şifreniz
-	* '$ETH_PASSWORD' ETH cüzdan şifreniz
+	* `$VALIDATOR` validator adınız
+	* `$WALLET` paloma cüzdan adınız
+	* `$ETH_RPC_URL` alchemy'den aldığınız link https ile başlayan
+	* `$ETH_SIGNING_KEY` cüzdan oluşturduğunuzda sondaki rakamlardan oluşan kod
+	* `$PALOMA_KEYRING_PASS` paloma cüzdan şifreniz
+	* `$ETH_PASSWORD` ETH cüzdan şifreniz
 ```shell
 echo 'export VALIDATOR='$VALIDATOR >> $HOME/.bash_profile
 echo 'export ETH_RPC_URL='$ETH_RPC_URL >> $HOME/.bash_profile
